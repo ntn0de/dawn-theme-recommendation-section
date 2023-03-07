@@ -21,3 +21,75 @@
     ]
   }
 {% endschema %}
+
+{% stylesheet %}
+.page-section__body{
+       max-width: 120rem;
+    margin:auto;
+    }
+    .product-recommendations {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        justify-content: center;
+        background: #FFFFFF;
+        box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.06), 0px 8px 24px -8px rgba(0, 0, 0, 0.25);
+        border-radius: 0px 0px 28px 28px;
+        padding: 10px;
+    }
+    .recommended_prod_title_wrapper {
+      color : white;
+      padding: 32px 16px;
+      border-radius: 16px 16px 0px 0px;
+      background-color: #394038;
+      align-items: center;
+      display: flex;
+      gap: 160px;
+      flex-direction: row;
+  }
+.product-image{
+    width:300px;
+    height: auto;
+}  
+{% endstylesheet %} 
+
+  <div class="page-section__body">
+   
+    <div
+      class="recommended_prod_title_wrapper"
+      style="background-image:url('{{ section.settings.recommended_product_bg_image.src | image_url: 'large' }}')"
+      ​​​​​​>
+      {{ section.settings.recommended_products_text_title }}
+    </div>
+    <div class="product-recommendations" >
+     
+        
+            <div class="product">
+              <a href="#">
+                <div class="product-image" style="background-image:url('{{ section.settings.recommended_product_bg_image.src | image_url: 'large' }}')"></div>
+              </a>
+              <div class="product-info">
+                <h3 class="product-title">Title </h3>
+                <div class="product-price">price</div>
+              </div>
+            </div>
+            <div class="product">
+                <a href="#">
+                  <div class="product-image" style="background-image:url('{{ section.settings.recommended_product_bg_image.src | image_url: 'large' }}')"></div>
+                </a>
+                <div class="product-info">
+                  <h3 class="product-title">Title </h3>
+                  <div class="product-price">price</div>
+                </div>
+              </div>
+              <div class="product">
+              <a href="#">
+                <div class="product-image" style="background-image:url('{{ section.settings.recommended_product_bg_image.src | image_url: 'large' }}')"></div>
+              </a>
+              <div class="product-info">
+                <h3 class="product-title">Title </h3>
+                <div class="product-price">price</div>
+              </div>
+            </div>
+       
+    </div>
+  </div>
