@@ -8,3 +8,6 @@
 4. Don’t show products that are sold out/not available
 5. A product can have more than one recommendation
 6. Design of the component : [Figma link](https://www.figma.com/file/tRbGIcusEOMPwdvsXIdf7t/Cart-page-TEST?node-id=429%3A17328&t=hmV7kFhEbCSi6tQf-0)
+
+### Section to watch 
+* /sections/recommended-products.liquid 
