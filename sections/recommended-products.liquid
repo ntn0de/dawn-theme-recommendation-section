@@ -24,8 +24,9 @@
 
 {% stylesheet %}
 .page-section__body{
-       max-width: 120rem;
+    max-width: 120rem;
     margin:auto;
+    margin-top: 50px;
     }
     .product-recommendations {
         display: grid;
@@ -51,45 +52,73 @@
     height: auto;
 }  
 {% endstylesheet %} 
+{% if cart.item_count > 0 %}
+
+{% liquid
+ assign cart_product_ids = '' 
+ for item in cart.items 
+   assign cart_product_ids = cart_product_ids | append: ',' | append: item.product.id 
+ endfor  
+ assign cart_product_ids = cart_product_ids | remove_first: ',' 
+ assign product_recommendations = '' 
+ assign prod_list = ''
+
+ %}
+
+
+
+ 
+ 
 
   <div class="page-section__body">
-   
+
     <div
       class="recommended_prod_title_wrapper"
       style="background-image:url('{{ section.settings.recommended_product_bg_image.src | image_url: 'large' }}')"
-      ​​​​​​>
-      {{ section.settings.recommended_products_text_title }}
+      ​>
+      {{ section.settings.recommended_products_text_title }} 
     </div>
     <div class="product-recommendations" >
-     
-        
+    
+    {%  assign prodcount = 0 %} 
+    {% for item in cart.items %}
+        {% assign product_recommendations = item.product.metafields.recommendation.recommended_products.value %}
+        {% for prod in product_recommendations %}
+           {% assign product = all_products[prod.handle] %}
+           {% assign product_id = product.id %}   
+          {% if product.available and prodcount <= 5 %}     
+         {% unless cart_product_ids contains product_id %}  
+         {%  assign prodcount = prodcount | plus: 1  %} 
+         {{prodcount}}
             <div class="product">
-              <a href="#">
-                <div class="product-image" style="background-image:url('{{ section.settings.recommended_product_bg_image.src | image_url: 'large' }}')"></div>
-              </a>
-              <div class="product-info">
-                <h3 class="product-title">Title </h3>
-                <div class="product-price">price</div>
-              </div>
-            </div>
-            <div class="product">
-                <a href="#">
-                  <div class="product-image" style="background-image:url('{{ section.settings.recommended_product_bg_image.src | image_url: 'large' }}')"></div>
-                </a>
-                <div class="product-info">
-                  <h3 class="product-title">Title </h3>
-                  <div class="product-price">price</div>
+              <a href="{{ product.url }}">
+                <div class="product-image" style="background-image:url('{{ product.featured_image.src | image_url: 'medium' }}')">
+                   <img
+                    loading="lazy"
+                    src="{{ product.featured_image.src | img_url: 'medium' }}"
+                    alt="{{ product.featured_image.alt }}"
+                    > 
                 </div>
-              </div>
-              <div class="product">
-              <a href="#">
-                <div class="product-image" style="background-image:url('{{ section.settings.recommended_product_bg_image.src | image_url: 'large' }}')"></div>
               </a>
               <div class="product-info">
-                <h3 class="product-title">Title </h3>
-                <div class="product-price">price</div>
+                <h3 class="product-title">{{ product.title | link_to: product.url }}</h3>
+                <div class="product-price">{{ product.price | money }}</div>
               </div>
-            </div>
+            </div> 
+
+            {% 
+                 
+            endunless %}
+            
+         {% endif %} 
+              
+       {% endfor %} 
+     {% endfor
+    
+      %} 
+  
        
     </div>
   </div>
+{% endif %}
+
