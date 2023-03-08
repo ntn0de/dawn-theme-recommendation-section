@@ -11,3 +11,10 @@
 
 ### Section to watch 
 * /sections/recommended-products.liquid 
+
+### Metafield Configuration :
+
+#### Settings > Custom Data > Metafields > Products >  Add Definition
+
+* Name : Recommended Products
+* Namespace and key : recommendation.recommended_products
