@@ -18,3 +18,5 @@
 
 * Name : Recommended Products
 * Namespace and key : recommendation.recommended_products
+
+### Set image of recommendation section title from the section's setting, default bg is a color.
