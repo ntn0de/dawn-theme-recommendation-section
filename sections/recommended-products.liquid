@@ -23,11 +23,6 @@
 {% endschema %}
 
 {% stylesheet %}
-/* This is just a patch for Dawn theme */
-div:empty{
-    display:block !important;
-}
-/* End patch */
   .recommended-product_wrapper {
     max-width: 120rem;
     margin: auto;
@@ -126,6 +121,10 @@ div:empty{
     background-color: #efefef;
     background-size: cover;
     background-position: center;
+    display:block !important;
+  }
+  .product-image:hover{
+    transition: background-image 0.75s ease-in;
   }
   @media only screen and (max-width: 767px) {
     .product-recommendations {
@@ -192,6 +191,10 @@ div:empty{
                   <div
                     class="product-image"
                     style="background-image:url('{{ product.featured_image.src | img_url: 'original' }}')"
+                    {% unless product.images[1] %}
+                    onmouseover="this.style.backgroundImage='url({{ product.images[1].src | img_url: 'original' }})'"
+                    onmouseout="this.style.backgroundImage='url({{ product.featured_image.src | img_url: 'original' }})'"
+                    {% endunless %}
                   ></div>
                 </a>
                 <div class="product-info">
