@@ -39,6 +39,9 @@
   display: flex;
   gap: 160px;
   flex-direction: row;
+  background-position: left;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .product-rating {
@@ -131,7 +134,7 @@
     margin-top: 10px;
     margin-bottom:10px;
     margin-right: 0px;
-    padding: 2px;
+    padding: 8px;
     width: calc(50% - 5px);
   }
   .product-image {
@@ -163,7 +166,7 @@
   
 <div class="recommended-product_wrapper">
     <div class="recommended_prod_title_wrapper" {% unless section.settings.recommended_product_bg_image == blank %}
-   style="background-image: url('{{ section.settings.recommended_product_bg_image.src | img_url }}');"
+   style="background-image: url('{{ section.settings.recommended_product_bg_image.src | img_url: 'original' }}');"
    {% endunless%}  ​>
       {{ section.settings.recommended_products_text_title }} 
     </div>
@@ -182,7 +185,7 @@
                 <div class="product_column">
                    
                     <a href="{{ product.url }}">
-                        <div class="product-image" style="background-image:url('{{ product.featured_image.src | img_url: '500x500' }}')">
+                        <div class="product-image" style="background-image:url('{{ product.featured_image.src | img_url: 'original' }}')">
                         
                         </div>
                     </a>
