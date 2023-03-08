@@ -23,34 +23,131 @@
 {% endschema %}
 
 {% stylesheet %}
-.page-section__body{
-    max-width: 120rem;
-    margin:auto;
-    margin-top: 50px;
-    }
-    .product-recommendations {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        justify-content: center;
-        background: #FFFFFF;
-        box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.06), 0px 8px 24px -8px rgba(0, 0, 0, 0.25);
-        border-radius: 0px 0px 28px 28px;
-        padding: 10px;
-    }
-    .recommended_prod_title_wrapper {
-      color : white;
-      padding: 32px 16px;
-      border-radius: 16px 16px 0px 0px;
-      background-color: #394038;
-      align-items: center;
-      display: flex;
-      gap: 160px;
-      flex-direction: row;
+.recommended-product_wrapper {
+  max-width: 120rem;
+  margin: auto;
+  margin-top: 50px;
+  padding: 0 1.5rem;
+}
+
+.recommended_prod_title_wrapper {
+  color: white;
+  padding: 32px 16px;
+  border-radius: 1.5rem 1.5rem 0 0;
+  background: #394038;
+  align-items: center;
+  display: flex;
+  gap: 160px;
+  flex-direction: row;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+}
+
+.product-stars {
+  display: flex;
+  align-items: center;
+  margin-right: 5px;
+}
+
+.star {
+  color: #ffdc12;
+  font-size: 24px;
+}
+.product-total-ratings {
+  font-size: 12px;
+  color: #999;
+}
+.product-title {
+  margin: 8px 0 0;
+}
+.product-title a {
+  color: #333333;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 24px;
+}
+.product-price {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.individually {
+  text-decoration: line-through;
+  flex-direction: column;
+  display: flex;
+}
+.individually > span {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.in-set {
+  flex-direction: column;
+  display: flex;
+  margin-right: 2rem;
+}
+.in-set > span {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.product-recommendations {
+  display: flex;
+  flex-wrap: nowrap;
+  background: #ffffff;
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0px 8px 24px -8px rgba(0, 0, 0, 0.25);
+  border-radius: 0px 1.375rem;
+  padding: 24px;
+  overflow-x: auto;
+}
+
+.product_column {
+  flex: 0 0 auto;
+  margin-right: 20px;
+  background-color: #fff;
+  width: 300px;
+}
+.product-image {
+  height: 300px;
+  border-radius: 2.5rem 0;
+  background-color: #efefef;
+  background-size: cover;
+  background-position: center;
+}
+@media only screen and (max-width: 767px) {
+  .product-recommendations {
+    flex-wrap: wrap;
+    justify-content: center;
+    overflow: unset;
+    padding:8px;
   }
-.product-image{
-    width:300px;
-    height: auto;
-}  
+
+  .product_column {
+    margin-top: 10px;
+    margin-bottom:10px;
+    margin-right: 0px;
+    padding: 2px;
+    width: calc(50% - 5px);
+  }
+  .product-image {
+    height: 0;
+    padding-bottom: 100%;
+  }
+  .product-price {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .star {
+    color: #ffdc12;
+    font-size: 16px;
+  }
+}
+
 {% endstylesheet %} 
 {% if cart.item_count > 0 %}
 
@@ -61,21 +158,13 @@
  endfor  
  assign cart_product_ids = cart_product_ids | remove_first: ',' 
  assign product_recommendations = '' 
- assign prod_list = ''
 
  %}
-
-
-
- 
- 
-
-  <div class="page-section__body">
-
-    <div
-      class="recommended_prod_title_wrapper"
-      style="background-image:url('{{ section.settings.recommended_product_bg_image.src | image_url: 'large' }}')"
-      ​>
+  
+<div class="recommended-product_wrapper">
+    <div class="recommended_prod_title_wrapper" {% unless section.settings.recommended_product_bg_image == blank %}
+   style="background-image: url('{{ section.settings.recommended_product_bg_image.src | img_url }}');"
+   {% endunless%}  ​>
       {{ section.settings.recommended_products_text_title }} 
     </div>
     <div class="product-recommendations" >
@@ -83,42 +172,65 @@
     {%  assign prodcount = 0 %} 
     {% for item in cart.items %}
         {% assign product_recommendations = item.product.metafields.recommendation.recommended_products.value %}
-        {% for prod in product_recommendations %}
-           {% assign product = all_products[prod.handle] %}
-           {% assign product_id = product.id %}   
-          {% if product.available and prodcount <= 5 %}     
-         {% unless cart_product_ids contains product_id %}  
-         {%  assign prodcount = prodcount | plus: 1  %} 
-         {{prodcount}}
-            <div class="product">
-              <a href="{{ product.url }}">
-                <div class="product-image" style="background-image:url('{{ product.featured_image.src | image_url: 'medium' }}')">
-                   <img
-                    loading="lazy"
-                    src="{{ product.featured_image.src | img_url: 'medium' }}"
-                    alt="{{ product.featured_image.alt }}"
-                    > 
+        {% for product in product_recommendations %}
+                {% if prodcount > 5 %}
+                        {% break %}
+                {% endif %}       
+                {% if product.available %}     
+                {% unless cart_product_ids contains product.id %}  
+                {% assign prodcount = prodcount | plus: 1 %} 
+                <div class="product_column">
+                   
+                    <a href="{{ product.url }}">
+                        <div class="product-image" style="background-image:url('{{ product.featured_image.src | img_url: '500x500' }}')">
+                        
+                        </div>
+                    </a>
+                    <div class="product-info">
+                        <h3 class="product-title">{{ product.title | link_to: product.url }}</h3>
+                        <div class="product-rating">
+                            <div class="product-stars">
+                                <span class="star">&#9733;</span>
+                                <span class="star">&#9733;</span>
+                                <span class="star">&#9733;</span>
+                                <span class="star">&#9733;</span>
+                                <span class="star">&#9734;</span>
+                            </div>
+                            <div class="product-total-ratings">(10)</div>
+                         </div>
+                        <div class="product-price"> 
+                            <div class="in-set">
+                            <span>Im Set</span>    
+                            {{ product.price | money }}</div>
+                            <div class="individually">
+                            <span>Einzeln</span>    
+                            {{ product.price_max | money }}</div>
+                        </div>
+                    </div>
+                   
                 </div>
-              </a>
-              <div class="product-info">
-                <h3 class="product-title">{{ product.title | link_to: product.url }}</h3>
-                <div class="product-price">{{ product.price | money }}</div>
-              </div>
-            </div> 
-
-            {% 
-                 
-            endunless %}
-            
-         {% endif %} 
-              
+                {% endunless %}
+                {% endif %}    
        {% endfor %} 
-     {% endfor
-    
-      %} 
-  
-       
+     {% endfor %}      
     </div>
-  </div>
+    </div>
+
 {% endif %}
 
+<script>
+// This script is to hide the section if there's no product, as the inner loop checks if the product is in cart , so there's the complexity of hiding the section if there's no section.
+document.addEventListener('DOMContentLoaded', () => {
+
+const productColumns = document.querySelectorAll('.product_column');
+const recommendedProductWrapper = document.querySelector('.recommended-product_wrapper');
+// check if there are any product columns
+if (productColumns.length > 0) {
+  const productColumnsCount = productColumns.length;
+  console.log('Number of product columns:', productColumnsCount);
+} else {
+  // hide the recommended-product_wrapper if there are no product columns
+  recommendedProductWrapper.style.display = 'none';
+}
+});
+</script>
